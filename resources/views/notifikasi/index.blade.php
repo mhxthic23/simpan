@@ -1,0 +1,7 @@
+@extends('layouts.app')
+@section('title', 'Notifikasi · SIMPAN')
+@section('content')
+<div class="d-flex justify-content-between align-items-center mb-4"><div><h1 class="h2 mb-1">Notifikasi</h1><p class="text-secondary mb-0">{{ $unreadCount }} belum dibaca.</p></div>@if($unreadCount)<form method="POST" action="{{ route('notifikasi.read-all') }}">@csrf @method('PATCH')<button class="btn btn-outline-primary">Tandai semua dibaca</button></form>@endif</div>
+@if(session('status'))<div class="alert alert-success">{{ session('status') }}</div>@endif
+<div class="list-group shadow-sm">@forelse($notifications as $item)<div class="list-group-item {{ $item->is_read ? '' : 'list-group-item-primary' }}"><div class="d-flex justify-content-between gap-3"><div><strong>{{ $item->judul }}</strong><div>{{ $item->pesan }}</div><small class="text-secondary">{{ $item->created_at?->format('d M Y H:i') }} · {{ $item->tipe }}</small></div><div class="text-nowrap">@if(!$item->is_read)<form method="POST" action="{{ route('notifikasi.read', $item) }}">@csrf @method('PATCH')<button class="btn btn-sm btn-outline-primary">Baca</button></form>@elseif($item->reference_type)<form method="POST" action="{{ route('notifikasi.read', $item) }}">@csrf @method('PATCH')<button class="btn btn-sm btn-link">Buka</button></form>@endif</div></div></div>@empty<div class="list-group-item text-center text-secondary py-5">Belum ada notifikasi.</div>@endforelse</div><div class="mt-3">{{ $notifications->links() }}</div>
+@endsection

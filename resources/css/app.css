@@ -1,0 +1,21 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+:root {
+    color-scheme: light;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #f4f7fb;
+}
+
+.brand-mark {
+    display: inline-grid;
+    width: 2.5rem;
+    height: 2.5rem;
+    place-items: center;
+    border-radius: 0.75rem;
+    background: #0d6efd;
+    color: #fff;
+    font-weight: 700;
+}

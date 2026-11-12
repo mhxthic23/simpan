@@ -1,0 +1,9 @@
+@extends('layouts.app')
+@section('title', $portfolio->judul.' · Portfolio SIMPAN')
+@section('content')
+<a href="{{ route('siswa.portfolio.index') }}" class="text-decoration-none">← Portfolio saya</a>
+@if(session('status'))<div class="alert alert-success mt-3">{{ session('status') }}</div>@endif @if(session('warning'))<div class="alert alert-warning mt-3">{{ session('warning') }}</div>@endif
+<article class="card border-0 shadow-sm mt-3"><div class="card-body p-4"><span class="badge text-bg-{{ $portfolio->is_public ? 'success' : 'secondary' }}">{{ $portfolio->is_public ? 'Publik' : 'Privat' }}</span><h1 class="h2 mt-3">{{ $portfolio->judul }}</h1><p class="text-secondary">{{ $portfolio->deskripsi ?: 'Tidak ada deskripsi.' }}</p>@if($portfolio->pengumpulanTugas)<p><strong>Karya tugas:</strong> {{ $portfolio->pengumpulanTugas->tugas->judul }} · Attempt {{ $portfolio->pengumpulanTugas->attempt_no }}</p>@endif @if($portfolio->penilaian?->published_at)<p><strong>Nilai dipublikasikan:</strong> {{ $portfolio->penilaian->nilai_total }} / 100</p>@endif
+@if($portfolio->file_path)<a class="btn btn-outline-primary" href="{{ route('portfolio.download', $portfolio) }}">Unduh berkas (private storage)</a>@endif @if($portfolio->is_public && $portfolio->ipfs_cid)<a class="btn btn-outline-secondary" href="{{ rtrim(config('services.pinata.gateway_url'), '/').'/'.rawurlencode($portfolio->ipfs_cid) }}" target="_blank" rel="noopener noreferrer">Buka salinan IPFS publik</a>@endif
+@if(auth()->id() === $portfolio->siswa_id)<div class="d-flex gap-2 mt-4"><a class="btn btn-primary" href="{{ route('siswa.portfolio.edit', $portfolio) }}">Ubah</a><form method="POST" action="{{ route('siswa.portfolio.destroy', $portfolio) }}" onsubmit="return confirm('Hapus portfolio ini? Konten IPFS publik tidak dapat ditarik kembali.')">@csrf @method('DELETE')<button class="btn btn-outline-danger">Hapus</button></form></div>@endif</div></article>
+@endsection

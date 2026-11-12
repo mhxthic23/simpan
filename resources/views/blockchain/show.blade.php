@@ -1,0 +1,10 @@
+@extends('layouts.app')
+@section('title', 'Detail Transaksi Blockchain · SIMPAN')
+@section('content')
+<a href="{{ route('blockchain.index') }}" class="text-decoration-none">← Kembali ke riwayat</a><h1 class="h2 mt-2 mb-4">Detail transaksi blockchain</h1>
+<div class="card border-0 shadow-sm"><div class="card-body p-4"><dl class="row mb-0"><dt class="col-sm-3">Peristiwa</dt><dd class="col-sm-9">{{ $transaction->event_type }}</dd><dt class="col-sm-3">Network</dt><dd class="col-sm-9">{{ $transaction->network }} · chain {{ $transaction->chain_id }}</dd><dt class="col-sm-3">Status</dt><dd class="col-sm-9">{{ ucfirst($transaction->status) }}</dd><dt class="col-sm-3">Hash payload SHA-256</dt><dd class="col-sm-9 font-monospace text-break">{{ $transaction->payload_hash }}</dd><dt class="col-sm-3">Transaction hash</dt><dd class="col-sm-9 font-monospace text-break">{{ $transaction->transaction_hash ?: 'Belum tersedia' }}</dd><dt class="col-sm-3">Blok</dt><dd class="col-sm-9">{{ $transaction->block_number ?? 'Belum dikonfirmasi' }}</dd><dt class="col-sm-3">Percobaan</dt><dd class="col-sm-9">{{ $transaction->attempt_count }}</dd><dt class="col-sm-3">Dibuat / dikirim / dikonfirmasi</dt><dd class="col-sm-9">{{ $transaction->created_at?->format('d M Y H:i') }} / {{ $transaction->submitted_at?->format('d M Y H:i') ?? '—' }} / {{ $transaction->confirmed_at?->format('d M Y H:i') ?? '—' }}</dd></dl>
+@if($transaction->error_message)<div class="alert alert-warning mt-4">Pengiriman belum berhasil. Pesan teknis tersedia untuk administrator.</div>@endif
+@if($explorerUrl)<a class="btn btn-outline-primary" href="{{ $explorerUrl }}" target="_blank" rel="noopener noreferrer">Lihat di Sepolia Explorer</a>@endif
+@if(auth()->user()->role === 'admin' && $transaction->status === 'failed' && ! $transaction->transaction_hash)<form method="POST" action="{{ route('admin.blockchain.retry', $transaction) }}" class="d-inline ms-2" onsubmit="return confirm('Jalankan ulang pengiriman transaksi?')">@csrf<button class="btn btn-outline-warning">Coba lagi</button></form>@endif
+</div></div>
+@endsection

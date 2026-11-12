@@ -1,0 +1,7 @@
+@extends('layouts.app')
+@section('title', 'Portfolio Saya · SIMPAN')
+@section('content')
+<div class="d-flex justify-content-between align-items-center mb-4"><div><h1 class="h2 mb-1">Portfolio saya</h1><p class="text-secondary mb-0">Pilih karya yang ingin Anda tampilkan.</p></div><a class="btn btn-primary" href="{{ route('siswa.portfolio.create') }}">Tambah karya</a></div>
+@if(session('status'))<div class="alert alert-success">{{ session('status') }}</div>@endif @if(session('warning'))<div class="alert alert-warning">{{ session('warning') }}</div>@endif
+<div class="row g-3">@forelse($portfolio as $item)<div class="col-md-6 col-xl-4"><article class="card border-0 shadow-sm h-100"><div class="card-body"><span class="badge text-bg-{{ $item->is_public ? 'success' : 'secondary' }}">{{ $item->is_public ? 'Publik' : 'Privat' }}</span><h2 class="h5 mt-3">{{ $item->judul }}</h2><p class="text-secondary">{{ \Illuminate\Support\Str::limit($item->deskripsi, 160) }}</p>@if($item->penilaian?->published_at)<div class="small">Nilai dipublikasikan: {{ $item->penilaian->nilai_total }}</div>@endif</div><div class="card-footer bg-white border-0"><a href="{{ route('siswa.portfolio.show', $item) }}" class="btn btn-sm btn-outline-primary">Detail</a></div></article></div>@empty<div class="col-12"><div class="card border-0 shadow-sm"><div class="card-body text-center text-secondary py-5">Portfolio masih kosong.</div></div></div>@endforelse</div><div class="mt-3">{{ $portfolio->links() }}</div>
+@endsection
